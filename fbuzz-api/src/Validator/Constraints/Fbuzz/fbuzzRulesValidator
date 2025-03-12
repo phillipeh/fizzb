@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Validator\Constraints;
+
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\ConstraintValidator;
+
+class fbuzzFunValidator extends ConstraintValidator
+{
+    public function validate($object, Constraint $constraint)
+    {
+        if (null === $object) {
+            return;
+        }
+
+        if (!isset($object->int1, $object->int2, $object->limit)) {
+            return;
+        }
+
+        if ($object->int1 * 10 > $object->limit || $object->int2 * 10 > $object->limit) {
+            $this->context->buildViolation($constraint->message)
+                ->setParameter('{{ value }}', $sum)
+				->setParameter('{{ comparedValue }}', $object->limit)
+                ->addViolation();
+        }
+    }
+}

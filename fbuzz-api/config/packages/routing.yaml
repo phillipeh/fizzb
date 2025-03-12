@@ -1,0 +1,8 @@
+#api_login:
+#    resource: '@LexikJWTAuthenticationBundle/Resources/config/routing/login.xml'
+#    prefix: /api
+#
+#api:
+#    resource: '../src/Controller/Api/'
+#    type: annotation
+#    prefix: /api

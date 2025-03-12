@@ -1,0 +1,58 @@
+{
+  "AWSEBDockerrunVersion": "2",
+  "containerDefinitions": [
+    {
+      "name": "app",
+      "image": 
+    {
+      "Name": "philipeh/app-1",
+      "Update": "true"
+    },
+      "essential": true,
+      "memory": 512,
+      "cpu": 256,
+      "portMappings": [
+        {
+          "containerPort": 80
+        }
+      ],
+      "environment": [
+        {
+          "name": "DATABASE_URL",
+          "value": "mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE}"
+        }
+      ],
+      "links": ["db"]
+    },
+    {
+      "name": "db",
+      "image": "mysql:8.0",
+      "essential": true,
+      "memory": 512,
+      "cpu": 256,
+      "portMappings": [
+        {
+          "containerPort": 3306
+        }
+      ],
+      "environment": [
+        {
+          "name": "MYSQL_ROOT_PASSWORD",
+          "value": "${MYSQL_ROOT_PASSWORD}"
+        },
+        {
+          "name": "MYSQL_DATABASE",
+          "value": "${MYSQL_DATABASE}"
+        },
+        {
+          "name": "MYSQL_USER",
+          "value": "${MYSQL_USER}"
+        },
+        {
+          "name": "MYSQL_PASSWORD",
+          "value": "${MYSQL_PASSWORD}"
+        }
+      ]
+    }
+  ]
+}

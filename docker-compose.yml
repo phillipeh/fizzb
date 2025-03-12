@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  # Symfony application container
+  app:
+    build: .
+    container_name: web_app
+    restart: always  # Restart automatically if the container crashes
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    env_file:
+      - .env
+    volumes:
+      - ./${PROJECT_DIR:-test_proj}:/var/www/html  # Mounts local code into the container
+    environment:
+      - APP_ENV=${APP_ENV:-dev}  
+      - DATABASE_URL=${DATABASE_URL:-mysql://symfony_user:symfony_pass@app_db:3306/symfony_db}
+ 
+
+  # MySQL database container
+  db:
+    image: mysql:8.0
+    container_name: app_db
+    restart: always
+    env_file:
+      - .env  # Load MySQL credentials and other configurations from .env file
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql  # Persist database data in a named volume
+      - ./db-init/:/docker-entrypoint-initdb.d/  # Run SQL scripts on first start
+      - ./mysql-config/my.cnf:/etc/mysql/my.cnf  # Use custom MySQL config
+
+volumes:
+  db_data:
+    driver: local
